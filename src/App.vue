@@ -8,7 +8,8 @@
       </div>
     </div>
   <div class="grid-wrapper">
-    <div class="simulation"><h2>Drag Race Simulation</h2></div>
+    <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack/></div>
+    
     <div class="simulation-inputs"><h2>Random Track Length: 250m</h2></div>
     <DemoGraph class="graph1"></DemoGraph>
     <DemoGraph class="graph2"></DemoGraph>
@@ -21,11 +22,13 @@
 
 <script>
 import DemoGraph from "./components/DemoGraph.vue";
+import RaceTrack from "./components/RaceTrack.vue";
 export default {
   name: "App",
   title: "Dimensional Graph",
   components: {
     DemoGraph,
+    RaceTrack
   },
 };
 </script>
@@ -68,10 +71,10 @@ h2 {
 .grid-wrapper{
   box-sizing: border-box;
   width: 100vw;
-  height: 600px;
+
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 100px 1fr 1fr;
+  grid-template-rows: 1fr 300px 300px;
   grid-template-areas: 
   "header header header header"
   "main-left main-left main-right main-right"
