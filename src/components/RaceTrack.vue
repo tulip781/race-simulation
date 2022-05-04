@@ -33,14 +33,14 @@ export default {
               this.y = 0;
           }
           display( ){
-              p5.fill(106, 106, 106);
+              p5.fill(190, 190, 190);
               p5.rect(100, 100/4, canvasDiv.offsetWidth -200, 50);
               p5.fill(255,255,255);
       
              
               for(let i=0; i <= ( canvasDiv.offsetWidth -235)/2; i+= 30){
                   console.log("This loop is called", canvasDiv.offsetWidth -200 )
-                   p5.rect(100 + 2*i, 100/2 -5, 30, 10);
+                   p5.rect(100 + 2*i, 100/2 -3, 30, 6);
                    }
             }
           update(){

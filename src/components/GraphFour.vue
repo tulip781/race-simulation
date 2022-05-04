@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <Plotly
@@ -13,7 +14,7 @@
 import simple from "./simple.js";
 import { Plotly } from "vue-plotly";
 export default {
-  name: "DemoGraph",
+  name: "GraphFour",
   components: {
       Plotly
   },

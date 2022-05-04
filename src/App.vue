@@ -13,32 +13,99 @@
 
     <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion"/></div>
     
-    <div class="simulation-inputs"><h2>Random Track Length: 250m</h2></div>
-    <DemoGraph class="graph1"></DemoGraph>
-    <DemoGraph class="graph2"></DemoGraph>
-    <DemoGraph class="graph3"></DemoGraph>
-    <DemoGraph class="graph4"></DemoGraph>
+    <div class="simulation-inputs">
+      <h2> Random Track Length: 250m</h2>
+      <table style="width:100%">
+        <tr>
+          <th>Gear Ratio:</th>
+          <td><input type="text" id="gearRatio" placeholder="0"></td>
+        </tr>
+        <tr>
+          <th>Mass of Kart + Driver (kg):</th>
+          <td><input type="text" id="massKD" placeholder="181.5kg"></td>
+        </tr>
+        <tr>
+          <th>Tyre Pressure (not including differences due to tyre temp change) (bar)</th>
+          <td><input type="text" id="p"  placeholder="2.48221"></td>
+        </tr>
+        <tr>
+          <th>Coefficient of drag</th>
+          <td><input type="text" id="Cd" placeholder="0.5"></td>
+        </tr>
+        <tr>
+          <th>Frontal Area</th>
+          <td><input type="text" id="A" placeholder="0.4"></td>
+        </tr>
+        <tr>
+          <th>Wheel Radius</th>
+          <td><input type="text" id="wheelr" placeholder="0.2794/2"></td>
+        </tr>
+        <tr>
+          <th>Mass Factor</th>
+          <td><input type="text" id="lm" placeholder="0.2794/2"></td>
+        </tr>
+        <tr>
+          <th>Density of Air</th>
+          <td><input type="text" id="rho" placeholder="0.2794/2"></td>
+        </tr>
+        <tr>
+          <th>Engaged Speed</th>
+          <td><input type="text" id="engagedSpeed" placeholder="2000"></td>
+        </tr>
+        <tr>
+          <th>Total Drive Train Efficiency  (not including clutch) (constant)</th>
+          <td><input type="text" id="tEff" placeholder="0.92"></td>
+        </tr>
+      </table>
+      <button @click="raceKart" class="race-button" v-bind:class="{ active: race, reset: !race }">
+        
+        <p v-if="!race"> Race Kart </p>
+        <p v-else> Reset Race </p>
+
+      </button>
+    </div>
+    <GraphOne class="graph1"></GraphOne>
+    <GraphTwo class="graph2"></GraphTwo>
+    <GraphThree class="graph3"></GraphThree>
+    <GraphFour class="graph4"></GraphFour>
   </div>
     
   </div>
 </template>
 
 <script>
-import DemoGraph from "./components/DemoGraph.vue";
+import GraphOne from "./components/GraphOne.vue";
+import GraphTwo from "./components/GraphTwo.vue";
+import GraphThree from "./components/GraphThree.vue";
+import GraphFour from "./components/GraphOne.vue";
 import RaceTrack from "./components/RaceTrack.vue";
 import gsap from "gsap";
 export default {
   name: "App",
   title: "Dimensional Graph",
   components: {
-    DemoGraph,
+    GraphOne,
+    GraphTwo,
+    GraphThree,
+    GraphFour,
     RaceTrack
   },
   data:function(){
     return {
       // raceCompletion must be decimal between 0-1
-      raceCompletion: 0.5, 
-      tweenedRaceCompletion: 0.5,
+      raceCompletion: 0, 
+      tweenedRaceCompletion: 0,
+      race: false,
+    }
+  },
+  methods: {
+    raceKart: function(){
+      this.race = !this.race;
+      if(this.race){
+        this.raceCompletion = Math.random() * (1 - 0) + 0;
+      } else {
+        this.raceCompletion = 0;
+      }
     }
   },
     watch: {
@@ -67,7 +134,7 @@ h1 {
 }
 h2 {
   margin: 3px;
-  font-weight: lighter;
+
   text-align: left;
   position: relative;
 
@@ -91,7 +158,7 @@ h2 {
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 300px 300px;
+  grid-template-rows: 1fr auto 300px;
   grid-template-areas: 
   "header header header header"
   "main-left main-left main-right main-right"
@@ -104,7 +171,7 @@ grid-area: header;
 
 .simulation-inputs {
 grid-area: main-left;
-background-color: orange;
+
 }
 .graph1{
 grid-area: main-right;
@@ -123,5 +190,29 @@ background-color: blue;
 .graph4{
   grid-area: mini2;
   background-color: rgb(255, 136, 0);
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+
+.race-button{ 
+    background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.active {
+  background-color: red;
 }
 </style>
