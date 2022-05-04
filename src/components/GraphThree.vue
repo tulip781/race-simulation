@@ -11,18 +11,18 @@
 </template>
 <script>
 
-import simple from "./simple.js";
+import data3 from "./data3.js";
 import { Plotly } from "vue-plotly";
 export default {
-  name: "GraphTwo",
+  name: "GraphThree",
   components: {
       Plotly
   },
 
   data() {
     return {
-      generics: [simple],
-      selected: simple
+      generics: [data3],
+      selected: data3
     };
   },
   computed: {

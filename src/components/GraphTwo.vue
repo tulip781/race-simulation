@@ -11,7 +11,7 @@
 </template>
 <script>
 
-import simple from "./simple.js";
+import data2 from "./data2.js";
 import { Plotly } from "vue-plotly";
 export default {
   name: "GraphTwo",
@@ -21,8 +21,8 @@ export default {
 
   data() {
     return {
-      generics: [simple],
-      selected: simple
+      generics: [data2],
+      selected: data2
     };
   },
   computed: {

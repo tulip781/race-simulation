@@ -10,7 +10,7 @@
 </template>
 <script>
 
-import simple from "./simple.js";
+import data1 from "./data1.js";
 import { Plotly } from "vue-plotly";
 export default {
   name: "GraphOne",
@@ -20,8 +20,8 @@ export default {
 
   data() {
     return {
-      generics: [simple],
-      selected: simple
+      generics: [data1],
+      selected: data1
     };
   },
   computed: {

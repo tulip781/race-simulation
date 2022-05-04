@@ -77,7 +77,7 @@
 import GraphOne from "./components/GraphOne.vue";
 import GraphTwo from "./components/GraphTwo.vue";
 import GraphThree from "./components/GraphThree.vue";
-import GraphFour from "./components/GraphOne.vue";
+import GraphFour from "./components/GraphFour.vue";
 import RaceTrack from "./components/RaceTrack.vue";
 import gsap from "gsap";
 export default {
@@ -153,9 +153,11 @@ h2 {
   margin-left: 20px;
 }
 .grid-wrapper{
+  padding: 30px;
   box-sizing: border-box;
   width: 100vw;
-
+column-gap: 10px;
+row-gap: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr auto 300px;
@@ -175,17 +177,17 @@ grid-area: main-left;
 }
 .graph1{
 grid-area: main-right;
-background-color: yellow;
+
 padding: 5px;
 box-sizing: border-box;
 }
 .graph2{
 grid-area: mid-graph;
-background-color: green;
+
 }
 .graph3{
 grid-area: mini1;
-background-color: blue;
+
 }
 .graph4{
   grid-area: mini2;
@@ -201,16 +203,17 @@ th, td {
 }
 
 .race-button{ 
-    background-color: #4CAF50;
+  background-color: #4CAF50;
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 5px 22px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 24px;
   margin: 4px 2px;
   cursor: pointer;
+  border-radius: 10%;
 }
 .active {
   background-color: red;

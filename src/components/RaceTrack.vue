@@ -58,7 +58,7 @@ export default {
         let track;
       let img;
       p5.preload = () => {
-        img = p5.loadImage(require('@/assets/rocket.png'));
+        img = p5.loadImage(require('@/assets/racecar2.png'));
       }
       p5.setup = () => {
          // Create canvas and set frame rate
@@ -84,7 +84,7 @@ export default {
         p5.background(255,255,255);
         track.display();
         console.log("this track Completion ", this.carCompletion)
-        p5.image(img, placeCar(this.carCompletion, 100, 50), 100/4, 50, 50)
+        p5.image(img, placeCar(this.carCompletion, 100, 100), 100/4, 50, 50)
       };
 
 

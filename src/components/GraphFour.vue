@@ -11,7 +11,7 @@
 </template>
 <script>
 
-import simple from "./simple.js";
+import data4 from "./data4.js";
 import { Plotly } from "vue-plotly";
 export default {
   name: "GraphFour",
@@ -21,8 +21,8 @@ export default {
 
   data() {
     return {
-      generics: [simple],
-      selected: simple
+      generics: [data4],
+      selected: data4
     };
   },
   computed: {
