@@ -7,8 +7,11 @@
         <h2>MECH40007 - Design and Manufacture</h2>
       </div>
     </div>
+    <label for="completion">Completion amount</label>
+        <input id="completion" type="range" min="0" max="1" step="0.01" v-model="raceCompletion">
   <div class="grid-wrapper">
-    <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack/></div>
+
+    <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion"/></div>
     
     <div class="simulation-inputs"><h2>Random Track Length: 250m</h2></div>
     <DemoGraph class="graph1"></DemoGraph>
@@ -23,6 +26,7 @@
 <script>
 import DemoGraph from "./components/DemoGraph.vue";
 import RaceTrack from "./components/RaceTrack.vue";
+import gsap from "gsap";
 export default {
   name: "App",
   title: "Dimensional Graph",
@@ -30,6 +34,19 @@ export default {
     DemoGraph,
     RaceTrack
   },
+  data:function(){
+    return {
+      // raceCompletion must be decimal between 0-1
+      raceCompletion: 0.5, 
+      tweenedRaceCompletion: 0.5,
+    }
+  },
+    watch: {
+    raceCompletion: function(newValue) {
+      gsap.to(this.$data, { duration: 2, tweenedRaceCompletion: newValue });
+    }
+  }
+  
 };
 </script>
 
@@ -82,7 +99,7 @@ h2 {
 }
 .simulation{
 grid-area: header;
-background-color: pink;
+
 }
 
 .simulation-inputs {
