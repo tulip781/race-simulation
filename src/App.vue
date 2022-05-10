@@ -14,47 +14,59 @@
     <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion"/></div>
     
     <div class="simulation-inputs">
-      <h2> Random Track Length: 250m</h2>
+      <h2> Random Track Length: {{this.distance}} Meters</h2>
       <table style="width:100%">
         <tr>
+          <th>Gear 1:</th>
+          <td><input type="text" id="gearRatio" :placeholder="G1" v-model="G1"></td>
+        </tr>
+        <tr>
+          <th>Gear 2:</th>
+          <td><input type="text" id="gearRatio" :placeholder="G2" v-model="G2"></td>
+        </tr>
+        <tr>
           <th>Gear Ratio:</th>
-          <td><input type="text" id="gearRatio" placeholder="0"></td>
+          <td>G1 / G2 = {{GR}}</td>
         </tr>
         <tr>
           <th>Mass of Kart + Driver (kg):</th>
-          <td><input type="text" id="massKD" placeholder="181.5kg"></td>
+          <td><input type="text" id="massKD" :placeholder="m" v-model="m"></td>
         </tr>
         <tr>
           <th>Tyre Pressure (not including differences due to tyre temp change) (bar)</th>
-          <td><input type="text" id="p"  placeholder="2.48221"></td>
+          <td><input type="text" id="p"  :placeholder="p" v-model="p"></td>
         </tr>
         <tr>
           <th>Coefficient of drag</th>
-          <td><input type="text" id="Cd" placeholder="0.5"></td>
+          <td><input type="text" id="Cd" :placeholder="Cd" v-model="Cd"></td>
         </tr>
         <tr>
           <th>Frontal Area</th>
-          <td><input type="text" id="A" placeholder="0.4"></td>
+          <td><input type="text" id="A" :placeholder="A" v-model="A"></td>
         </tr>
         <tr>
           <th>Wheel Radius</th>
-          <td><input type="text" id="wheelr" placeholder="0.2794/2"></td>
+          <td><input type="text" id="wheelr" :placeholder="wheelr" v-model="wheelr"></td>
         </tr>
         <tr>
           <th>Mass Factor</th>
-          <td><input type="text" id="lm" placeholder="0.2794/2"></td>
+          <td><input type="text" id="lm" :placeholder="lm" v-model="lm"></td>
         </tr>
         <tr>
           <th>Density of Air</th>
-          <td><input type="text" id="rho" placeholder="0.2794/2"></td>
+          <td><input type="text" id="rho" :placeholder="rho" v-model="rho"></td>
+        </tr>
+        <tr>
+          <th>T End - Between 0 - 10</th>
+          <td><input type="text" id="tend" :placeholder="tend" v-model="tend" min="0" max="10"></td>
         </tr>
         <tr>
           <th>Engaged Speed</th>
-          <td><input type="text" id="engagedSpeed" placeholder="2000"></td>
+          <td><input type="text" id="engagedSpeed" :placeholder="engagedSpeed" v-model="engagedSpeed"></td>
         </tr>
         <tr>
           <th>Total Drive Train Efficiency  (not including clutch) (constant)</th>
-          <td><input type="text" id="tEff" placeholder="0.92"></td>
+          <td><input type="text" id="tEff" :placeholder="tEff" v-model="tEff"></td>
         </tr>
       </table>
       <button @click="raceKart" class="race-button" v-bind:class="{ active: race, reset: !race }">
@@ -64,10 +76,10 @@
 
       </button>
     </div>
-    <GraphOne class="graph1"></GraphOne>
-    <GraphTwo class="graph2"></GraphTwo>
-    <GraphThree class="graph3"></GraphThree>
-    <GraphFour class="graph4"></GraphFour>
+    <GraphOne class="graph1" :gr="GR" :speed="results.speed" :time="results.time"></GraphOne>
+    <GraphTwo class="graph2" :time="results.time" :fr="results.Fr" :fd="results.Fd" :ft="results.Ft"></GraphTwo>
+    <GraphThree class="graph3" :time="results.time" :acc="results.acc"></GraphThree>
+    <GraphFour class="graph4" :time="results.time" :w1="results.w1" :w2="results.w2" :enginerpm="results.enginerpm"></GraphFour>
   </div>
     
   </div>
@@ -169,11 +181,14 @@ export default {
   methods: {
     raceKart: function(){
       this.race = !this.race;
-      this.simulate(this.GR, this.t, this.parameters, this.distance)
       if(this.race){
+        this.simulate(this.GR, this.t, this.parameters, this.distance)
         this.raceCompletion = Math.random() * (1 - 0) + 0;
       } else {
         this.raceCompletion = 0;
+        Object.keys(this.results).forEach(key => {
+          this.results[key] = null;
+        })
       }
     },
     simulate: function(GR, t, parameters, distance, initialVel = 0) {
@@ -341,7 +356,7 @@ column-gap: 10px;
 row-gap: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr auto 300px;
+  grid-template-rows: 1fr 800px 500px;
   grid-template-areas: 
   "header header header header"
   "main-left main-left main-right main-right"

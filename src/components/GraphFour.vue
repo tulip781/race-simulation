@@ -3,9 +3,9 @@
   <div>
     <Plotly
     class="graph"
-    v-bind="selected.data.attr"
-    :data="selected.data.data"
-    :layout="selected.data.layout"
+    v-bind="graphData.attr"
+    :data="graphData.data"
+    :layout="graphData.layout"
         ></Plotly>
   </div>
 </template>
@@ -25,6 +25,32 @@ export default {
       selected: data4
     };
   },
+  props:{
+    time: {
+     type: Array,
+     default: function(){
+       return []
+     }
+   },
+   w1: {
+     type: Array,
+     default: function(){
+       return []
+     }
+   },
+   w2: {
+     type: Array,
+     default: function(){
+       return []
+     }
+   },
+   enginerpm: {
+     type: Array,
+     default: function(){
+       return []
+     }
+   },
+  },
   computed: {
     code() {
       const {
@@ -36,6 +62,63 @@ export default {
         .map(key => `:${key}="${attr[key]}"`)
         .join(" ");
       return `<plotly :data="data" :layout="layout" ${fromAttr}/>`;
+    },
+    trace1: function(){
+      return {
+        x: this.time,
+        y: this.w1,
+        type: 'scatter',
+        line: {
+          color:  "#66FF00"
+        },
+        name: "Rear Axle Sprocket"
+      }
+    },
+    trace2: function(){
+      return {
+        x: this.time,
+        y: this.w2,
+        type: 'scatter',
+        line: {
+          color:  "#0096FF"
+        },
+        name: "Clutch Sprocket"
+      }
+    },
+    trace3: function(){
+      return {
+        x: this.time,
+        y: this.enginerpm,
+        type: 'scatter',
+        line: {
+          color:  "#FFA500"
+        },
+        name: "Engine Speed"
+      }
+    },
+    graphData(){
+      return {
+  display: 'Scatter',
+  data: {
+    data: [this.trace1, this.trace2, this.trace3],
+    attr: { displayModeBar: false },
+    layout: {
+      title: 'Engine and Sprocket Speeds (RPM)',
+
+      dragmode: false,
+      scrollZoom: false,
+        yaxis: {
+          title: "Forces (N)"},
+          dtick: 100,
+
+        xaxis: {
+          title: "Time (s)",
+          dtick: 10,
+        },
+
+    },
+  },
+};
     }
   }
 };

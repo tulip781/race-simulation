@@ -1,10 +1,14 @@
 <template>
   <div>
+    <h1>This gear ratio is {{this.gr}}</h1>
     <Plotly
     class="graph"
-    v-bind="selected.data.attr"
-    :data="selected.data.data"
-    :layout="selected.data.layout"
+    v-bind="graphData.data.attr"
+    :data="graphData.data"
+    :layout="graphData.layout"
+       :display-mode-bar="false"
+      :drag-mode="false"
+      :responsive="true"
         ></Plotly>
   </div>
 </template>
@@ -24,6 +28,25 @@ export default {
       selected: data1
     };
   },
+  props: {
+    gr:{
+      type: Number,
+      default: 0
+    },
+    time: {
+      type: Array,
+      default: function(){
+        return[]
+      }
+    },
+    speed: {
+      type: Array,
+      default: function(){
+        return[]
+      }
+    },
+
+  },
   computed: {
     code() {
       const {
@@ -35,8 +58,42 @@ export default {
         .map(key => `:${key}="${attr[key]}"`)
         .join(" ");
       return `<plotly :data="data" :layout="layout" ${fromAttr}/>`;
-    }
-  }
+    },
+    trace1: function(){
+      return {
+        x: this.time,
+        y: this.speed,
+        type: 'scatter',
+        line: {
+          color:  "#0096FF"
+        }
+     }
+    },
+    graphData: function() {
+      return{
+        display: 'Scatter',
+        data: {
+          data: [this.trace1],
+          attr: { displayModeBar: false },
+          layout: {
+
+            dragmode: false,
+            scrollZoom: false,
+            title: 'Kart Speed (km/h) vs Time (s) for a Gear Ration of' + toString(this.gr),
+
+              yaxis: {
+                title: "Speed (km/h)"},
+                dtick: 20,
+
+              xaxis: {
+                title: "Time (s)",
+                dtick: 5,
+              },
+
+          },
+        },
+      }
+    },}
 };
 </script>
 <style>

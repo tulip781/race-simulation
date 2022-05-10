@@ -39,7 +39,7 @@ export default {
       
              
               for(let i=0; i <= ( canvasDiv.offsetWidth -235)/2; i+= 30){
-                  console.log("This loop is called", canvasDiv.offsetWidth -200 )
+            
                    p5.rect(100 + 2*i, 100/2 -3, 30, 6);
                    }
             }
@@ -83,7 +83,7 @@ export default {
 
         p5.background(255,255,255);
         track.display();
-        console.log("this track Completion ", this.carCompletion)
+
         p5.image(img, placeCar(this.carCompletion, 100, 100), 100/4, 50, 50)
       };
 

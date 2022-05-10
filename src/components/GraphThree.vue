@@ -3,9 +3,9 @@
   <div>
     <Plotly
     class="graph"
-    v-bind="selected.data.attr"
-    :data="selected.data.data"
-    :layout="selected.data.layout"
+    v-bind="graphData.attr"
+    :data="graphData.data"
+    :layout="graphData.layout"
         ></Plotly>
   </div>
 </template>
@@ -18,7 +18,20 @@ export default {
   components: {
       Plotly
   },
-
+  props: {
+    time: {
+     type: Array,
+     default: function(){
+       return []
+     }
+   },
+    acc: {
+     type: Array,
+     default: function(){
+       return []
+     }
+   },
+  },
   data() {
     return {
       generics: [data3],
@@ -36,7 +49,38 @@ export default {
         .map(key => `:${key}="${attr[key]}"`)
         .join(" ");
       return `<plotly :data="data" :layout="layout" ${fromAttr}/>`;
-    }
+    },
+    trace1: function(){
+      return {
+        y: this.acc,
+        x: this.time,
+        type: 'scatter',
+      }
+    },
+    graphData: function(){
+      return  {
+    display: 'Scatter',
+    data: {
+      data: [this.trace1],
+      attr: { displayModeBar: false },
+      layout: {
+        title: 'Longitudional Acceleration (G/s)',
+
+        dragmode: false,
+        scrollZoom: false,
+          yaxis: {
+  
+            dtick: 0.1,},
+
+          xaxis: {
+            title: "Time (s)",
+            dtick: 10,
+          },
+
+      },
+    },
+  }
+    },
   }
 };
 </script>
