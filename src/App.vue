@@ -79,6 +79,9 @@ import GraphTwo from "./components/GraphTwo.vue";
 import GraphThree from "./components/GraphThree.vue";
 import GraphFour from "./components/GraphFour.vue";
 import RaceTrack from "./components/RaceTrack.vue";
+import everpolate from "everpolate";
+import _ from "lodash";
+
 import gsap from "gsap";
 export default {
   name: "App",
@@ -96,16 +99,194 @@ export default {
       raceCompletion: 0, 
       tweenedRaceCompletion: 0,
       race: false,
+      m: 96.5 +85,
+      g: 9.81,
+      p:2.48211,
+      Cd: 0.5,
+      A:0.4,
+      wheelr: 0.2794/2,
+      G1: 20,
+      G2: 71,
+      rho: 1.23,
+      distance: 500,
+      dt:0.01,
+      tend: 50,
+      engagedSpeed: 2000,
+      tEff: 0.93,
+      rpm: [2000, 2600, 3000, 3500, 4000, 5000, 6000, 6200, 6960],
+      drpm: 1,
+      results: {
+        time: null,
+        enginerpm: null,
+        speed: null,
+        acc: null,
+        dist: null,
+        timeDist: null,
+        firstIndex: null,
+        w1: null,
+        w2: null,
+        Fr: null,
+        Fd: null,
+        Ft: null
+      }
     }
+  },
+  computed: {
+    GR: function(){
+      return this.G2/this.G1
+    },
+    lm: function(){
+      return  1 + 0.04 + 0.0025*(this.GR**2)
+    },
+     parameters: function(){ 
+       return {'m': this.m, 'g': this.g, 'p': this.p, 'Cd': this.Cd, 'A': this.A, 'wheelr': this.wheelr, 'lm': this.lm, 'rho': this.rho,
+              'engagedSpeed': this.engagedSpeed, 'tEff': this.tEff}
+    },
+    trq: function(){
+      let b = [5.0, 13.8, 15.0, 14.0, 13.0, 10.35, 7.0, 6.0, 1.0] ;
+      b.forEach((i, index) => b[index] = 2*i);
+      b.forEach((i, index) => b[index] = 1.03*i)
+    return b
+    },
+    minrpm: function(){
+      return this.rpm[0];
+    },
+    maxrpm: function(){
+      return this.rpm[-1];
+    },
+    irpm: function(){
+      let  arrangeResult = []
+      for(let i = this.minrpm; i < this.maxrpm; i+= this.drpm ){
+          arrangeResult.push(i);
+      }
+      return arrangeResult
+    },
+    t: function(){
+        return  _.range(0, this.tend+ this.dt, this.dt)
+    },
+        
   },
   methods: {
     raceKart: function(){
       this.race = !this.race;
+      this.simulate(this.GR, this.t, this.parameters, this.distance)
       if(this.race){
         this.raceCompletion = Math.random() * (1 - 0) + 0;
       } else {
         this.raceCompletion = 0;
       }
+    },
+    simulate: function(GR, t, parameters, distance, initialVel = 0) {
+      let v, c, Fr, Fd, Ft, a, d,w1, w2, eng, maxRpm, Teng, Tout, alpha, newEngSpeed, km, gs;
+      let timeDist = null;
+      let firstindex;
+      let startingArray = []
+      for (let i = 0; i < t.length; i++){
+          startingArray.push(0)
+      }
+      v= [...startingArray]; 
+      c= [...startingArray]; 
+      Fr= [...startingArray]; 
+      Fd= [...startingArray]; 
+      Ft= [...startingArray]; 
+      a= [...startingArray]; 
+      d= [...startingArray];
+      w1= [...startingArray]; 
+      w2= [...startingArray]; 
+      eng = [...startingArray];
+      // initial kart velocity in m/s
+      // assumed 0 in this version
+      v[0] = initialVel*(1000/(60*60));
+      // use initial kart velocity to set an initial output shaft rotation speed
+      w2[0] = v[0]/(0.2794*0.5) * (60/(2*3.14));
+      w1[0] = w2[0] * GR;
+      // idling engine speed (RPM)
+      eng[0] = 2200;
+      // set engine speed maximum limit (based on experimental data)
+      maxRpm = 6960
+      for (let i = 0; i < t.length  ; i++){
+        // console.log(0.005 + (1/parameters['p'])*(0.01+0.0095*((v[i]*3.6)/100)**2))
+        c[i+1] = 0.005 + (1/parameters['p'])*(0.01+0.0095*((v[i]*3.6)/100)**2)
+        Fr[i+1] = c[i]*parameters['m'] * parameters['g']
+        Fd[i+1] = 0.5*parameters['rho']*parameters['Cd']*parameters['A']*(v[i]**2)
+
+        // torque for each engine speed using engine power curves
+
+        Teng =everpolate.polynomial(eng[i], this.rpm, this.trq); 
+
+        Tout = Teng * parameters['tEff'] * GR;
+    
+        Ft[i+1] = Tout/parameters['wheelr']
+
+        if( w1[i]<maxRpm){
+            a[i+1] = 1/(parameters['lm']*parameters['m']) * (Ft[i+1] - Fr[i+1] - Fd[i+1])
+        } else {
+            a[i+1] = 0
+        }
+
+        // calculate instantaneous speed change (over dt)
+        v[i+1] = v[i] + a[i+1]*this.dt
+        
+        // calculate distance travelled (over dt)
+        d[i+1] = d[i] + v[i+1]*this.dt
+        
+        // calculate rear axle rpm based on vehicle travel speed
+        w2[i+1] = v[i+1]/(this.wheelr) * (60/(2*3.14))
+        w1[i+1] = (w2[i+1])*GR
+        
+        // update new engine speed based on increase in output shaft speed
+        // parameter that was tuned to reflect real life behaviour
+        alpha = 0.40
+        newEngSpeed = eng[i] + alpha*(w1[i+1]-w1[i])
+        if( newEngSpeed >= maxRpm ||  w1[i+1] >= maxRpm){
+          eng[i+1] = maxRpm;
+          w1[i+1] = maxRpm;
+        } else {
+            if (newEngSpeed > w1[i+1]) {
+              eng[i+1] = newEngSpeed
+            }
+            else {
+                eng[i+1] = w1[i+1]
+            }
+        }
+      }
+      km = v.map(x=> x*3.6);
+      gs = a.map(x=>x/this.g);
+      function find(val, a, b ){
+          let overindex = [];
+          console.log("A ,", a)
+          a.forEach((item, index)=> {
+            if(item > val){
+              overindex.push(index);
+            }
+          })
+          console.log("Overindex, ", overindex)
+          //  overindex = np.where(a > val);
+          // 
+            let  firstindex = overindex[0]
+            return [firstindex, b[firstindex] ]
+        }
+        try {
+            [ firstindex, timeDist] = find(distance, d, t)
+          } catch (error) {
+            console.error('Time domain not sufficient for a distance of ', distance, 'm, increase T_end');
+            timeDist = 0
+          }
+
+
+      this.results['time'] = t
+      this.results['enginerpm'] = eng
+      this.results['speed'] = km
+      this.results['acc'] = gs
+      this.results['dist'] = d
+      this.results['timeDist'] = timeDist
+      this.results['firstIndex'] = firstindex
+      this.results['w1'] = w1
+      this.results['w2'] = w2
+      this.results['Fr'] = Fr
+      this.results['Fd'] = Fd
+      this.results['Ft'] = Ft
+   
     }
   },
     watch: {
