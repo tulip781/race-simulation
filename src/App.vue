@@ -15,7 +15,12 @@
     
     <div class="simulation-inputs">
       <h2> Random Track Length: {{this.distance}} Meters</h2>
+      <h2>Time taken to travel {{this.distance}} Meters = {{this.timeToTravel}}S</h2>
       <table style="width:100%">
+          <tr>
+            <th>Distance</th>
+            <td><input type="text" id="distance" :placeholder="distance" v-model="distance"></td>
+          </tr>
         <tr>
           <th>Gear 1:</th>
           <td><input type="text" id="gearRatio" :placeholder="G1" v-model="G1"></td>
@@ -144,6 +149,14 @@ export default {
     }
   },
   computed: {
+    timeToTravel: function(){
+      let val = 0;
+      if(    this.results.timeDist){
+         val = this.results.timeDist.toFixed(2)
+      }
+
+      return val
+    },
     GR: function(){
       return this.G2/this.G1
     },
@@ -183,9 +196,10 @@ export default {
       this.race = !this.race;
       if(this.race){
         this.simulate(this.GR, this.t, this.parameters, this.distance)
-        this.raceCompletion = Math.random() * (1 - 0) + 0;
+        this.raceCompletion = 1;
       } else {
         this.raceCompletion = 0;
+        this.timeToTravel = 0;
         Object.keys(this.results).forEach(key => {
           this.results[key] = null;
         })
@@ -275,7 +289,7 @@ export default {
               overindex.push(index);
             }
           })
-          console.log("Overindex, ", overindex)
+  
           //  overindex = np.where(a > val);
           // 
             let  firstindex = overindex[0]
@@ -301,6 +315,7 @@ export default {
       this.results['Fr'] = Fr
       this.results['Fd'] = Fd
       this.results['Ft'] = Ft
+      console.log(this.results)
    
     }
   },

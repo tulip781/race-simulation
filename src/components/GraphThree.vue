@@ -4,7 +4,7 @@
     <Plotly
     class="graph"
     v-bind="graphData.attr"
-    :data="graphData.data"
+    :data="graphData.data.data"
     :layout="graphData.layout"
         ></Plotly>
   </div>

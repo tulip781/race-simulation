@@ -4,7 +4,7 @@
     <Plotly
     class="graph"
     v-bind="graphData.data.attr"
-    :data="graphData.data"
+    :data="graphData.data.data"
     :layout="graphData.layout"
        :display-mode-bar="false"
       :drag-mode="false"
