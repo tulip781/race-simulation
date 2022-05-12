@@ -4,14 +4,14 @@
     <Plotly
     class="graph"
     v-bind="graphData.attr"
-    :data="graphData.data.data"
+    :data="graphData.data"
     :layout="graphData.layout"
         ></Plotly>
   </div>
 </template>
 <script>
 
-import data4 from "./data4.js";
+
 import { Plotly } from "vue-plotly";
 export default {
   name: "GraphFour",
@@ -19,12 +19,6 @@ export default {
       Plotly
   },
 
-  data() {
-    return {
-      generics: [data4],
-      selected: data4
-    };
-  },
   props:{
     time: {
      type: Array,
@@ -108,12 +102,14 @@ export default {
       dragmode: false,
       scrollZoom: false,
         yaxis: {
-          title: "Forces (N)"},
-          dtick: 100,
+          title: "Forces (N)"     ,    showline: true},
+   
+
 
         xaxis: {
           title: "Time (s)",
-          dtick: 10,
+            showline: true,
+     
         },
 
     },
@@ -137,7 +133,7 @@ export default {
   margin-top: 8px;
 }
 .graph {
- height: 100%;
+ height: 300px;
 }
 div.jsoneditor-menu {
   background-color: #007bff;

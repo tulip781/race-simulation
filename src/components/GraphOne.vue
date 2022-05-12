@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1>This gear ratio is {{this.gr}}</h1>
+
     <Plotly
     class="graph"
     v-bind="graphData.data.attr"
-    :data="graphData.data.data"
+    :data="graphData.data"
     :layout="graphData.layout"
        :display-mode-bar="false"
       :drag-mode="false"
@@ -14,7 +14,7 @@
 </template>
 <script>
 
-import data1 from "./data1.js";
+
 import { Plotly } from "vue-plotly";
 export default {
   name: "GraphOne",
@@ -22,12 +22,6 @@ export default {
       Plotly
   },
 
-  data() {
-    return {
-      generics: [data1],
-      selected: data1
-    };
-  },
   props: {
     gr:{
       type: Number,
@@ -79,16 +73,17 @@ export default {
 
             dragmode: false,
             scrollZoom: false,
-            title: 'Kart Speed (km/h) vs Time (s) for a Gear Ration of' + toString(this.gr),
-
-              yaxis: {
-                title: "Speed (km/h)"},
-                dtick: 20,
-
+            title: 'Kart Speed (km/h) vs Time (s) for a Gear Ration of ' + this.gr.toString(),           
               xaxis: {
                 title: "Time (s)",
-                dtick: 5,
+          showline: true,
               },
+
+              yaxis: {
+                title: "Speed (km/h)", showline: true,
+},
+           
+
 
           },
         },
@@ -110,7 +105,7 @@ export default {
   margin-top: 8px;
 }
 .graph {
- height: 100%;
+ height: 300px;
 }
 div.jsoneditor-menu {
   background-color: #007bff;

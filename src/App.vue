@@ -7,27 +7,41 @@
         <h2>MECH40007 - Design and Manufacture</h2>
       </div>
     </div>
-    <label for="completion">Completion amount</label>
-        <input id="completion" type="range" min="0" max="1" step="0.01" v-model="raceCompletion">
-  <div class="grid-wrapper">
+  <p class="left-align">The purpose of the tool is to help students intuitively understand the effects of various transmission
+and vehicle parameters (most importantly the Gear Ratio) on the performance of a kart. </p>
+
 
     <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion"/></div>
-    
-    <div class="simulation-inputs">
-      <h2> Random Track Length: {{this.distance}} Meters</h2>
-      <h2>Time taken to travel {{this.distance}} Meters = {{this.timeToTravel}}S</h2>
+
+      <h5>Time taken to travel {{this.distance}} Meters = {{this.timeToTravel}}S</h5>
+
+    <div class="panel-layout">
+      <div class="left-wrap">
+        <h1>Graph Results</h1>
+        <p class="left-align">Below are the resulting graphs from the given inputs. You can use the buttons above each graph to download it as a PNG.</p>
+        <div class="graph-grid">
+        <GraphOne class="graph1" :gr="GR" :speed="results.speed" :time="results.time"></GraphOne>
+        <GraphTwo class="graph2" :time="results.time" :fr="results.Fr" :fd="results.Fd" :ft="results.Ft"></GraphTwo>
+        <GraphThree class="graph3" :time="results.time" :acc="results.acc"></GraphThree>
+        <GraphFour class="graph4" :time="results.time" :w1="results.w1" :w2="results.w2" :enginerpm="results.enginerpm"></GraphFour>
+        </div>
+      </div>
+      <div class="simulation-inputs">
+        <h1>Simulation inputs</h1>
+        <p class="left-align"> Update the inputs below, then press Race to see the effect on the Go Kart. </p>
+
       <table style="width:100%">
           <tr>
             <th>Distance</th>
-            <td><input type="text" id="distance" :placeholder="distance" v-model="distance"></td>
+            <td><input type="text" id="distance" :placeholder="distance" v-model="distance"> <span class="units">Meters (m)</span></td>
           </tr>
         <tr>
           <th>Gear 1:</th>
-          <td><input type="text" id="gearRatio" :placeholder="G1" v-model="G1"></td>
+          <td><input type="text" id="gearRatio" :placeholder="G1" v-model="G1"><span class="units">Teeth</span></td>
         </tr>
         <tr>
           <th>Gear 2:</th>
-          <td><input type="text" id="gearRatio" :placeholder="G2" v-model="G2"></td>
+          <td><input type="text" id="gearRatio" :placeholder="G2" v-model="G2"><span class="units">Teeth</span></td>
         </tr>
         <tr>
           <th>Gear Ratio:</th>
@@ -35,11 +49,11 @@
         </tr>
         <tr>
           <th>Mass of Kart + Driver (kg):</th>
-          <td><input type="text" id="massKD" :placeholder="m" v-model="m"></td>
+          <td><input type="text" id="massKD" :placeholder="m" v-model="m"><span class="units">kg</span></td>
         </tr>
         <tr>
           <th>Tyre Pressure (not including differences due to tyre temp change) (bar)</th>
-          <td><input type="text" id="p"  :placeholder="p" v-model="p"></td>
+          <td><input type="text" id="p"  :placeholder="p" v-model="p"><span class="units">bar</span></td>
         </tr>
         <tr>
           <th>Coefficient of drag</th>
@@ -47,11 +61,11 @@
         </tr>
         <tr>
           <th>Frontal Area</th>
-          <td><input type="text" id="A" :placeholder="A" v-model="A"></td>
+          <td><input type="text" id="A" :placeholder="A" v-model="A"><span class="units">m^2</span></td>
         </tr>
         <tr>
           <th>Wheel Radius</th>
-          <td><input type="text" id="wheelr" :placeholder="wheelr" v-model="wheelr"></td>
+          <td><input type="text" id="wheelr" :placeholder="wheelr" v-model="wheelr"><span class="units">m</span></td>
         </tr>
         <tr>
           <th>Mass Factor</th>
@@ -59,15 +73,15 @@
         </tr>
         <tr>
           <th>Density of Air</th>
-          <td><input type="text" id="rho" :placeholder="rho" v-model="rho"></td>
+          <td><input type="text" id="rho" :placeholder="rho" v-model="rho"><span class="units">kg/m^3</span></td>
         </tr>
         <tr>
-          <th>T End - Between 0 - 10</th>
-          <td><input type="text" id="tend" :placeholder="tend" v-model="tend" min="0" max="10"></td>
+          <th>Time Duration</th>
+          <td><input type="text" id="tend" :placeholder="tend" v-model="tend" > <span class="units">Seconds</span>  </td>
         </tr>
         <tr>
           <th>Engaged Speed</th>
-          <td><input type="text" id="engagedSpeed" :placeholder="engagedSpeed" v-model="engagedSpeed"></td>
+          <td><input type="text" id="engagedSpeed" :placeholder="engagedSpeed" v-model="engagedSpeed"><span class="units">RPM</span></td>
         </tr>
         <tr>
           <th>Total Drive Train Efficiency  (not including clutch) (constant)</th>
@@ -81,11 +95,8 @@
 
       </button>
     </div>
-    <GraphOne class="graph1" :gr="GR" :speed="results.speed" :time="results.time"></GraphOne>
-    <GraphTwo class="graph2" :time="results.time" :fr="results.Fr" :fd="results.Fd" :ft="results.Ft"></GraphTwo>
-    <GraphThree class="graph3" :time="results.time" :acc="results.acc"></GraphThree>
-    <GraphFour class="graph4" :time="results.time" :w1="results.w1" :w2="results.w2" :enginerpm="results.enginerpm"></GraphFour>
-  </div>
+</div>
+
     
   </div>
 </template>
@@ -149,6 +160,9 @@ export default {
     }
   },
   computed: {
+    allProperties: function(){
+      return `${this.m}|${this.g}|${this.p}|${this.Cd}|${this.A}|${this.wheelr}|${this.G1}|${this.G2}|${this.rho}|${this.distance}|${this.dt}|${this.tend}|${this.engagedSpeed}|${this.dt}|`
+    },
     timeToTravel: function(){
       let val = 0;
       if(    this.results.timeDist){
@@ -322,7 +336,15 @@ export default {
     watch: {
     raceCompletion: function(newValue) {
       gsap.to(this.$data, { duration: 2, tweenedRaceCompletion: newValue });
-    }
+    },
+    allProperties: function(){
+      this.raceCompletion = 0;
+      this.timeToTravel = 0;
+      Object.keys(this.results).forEach(key => {
+      this.results[key] = null;
+      this.race = false;
+      })
+    },
   }
   
 };
@@ -349,6 +371,10 @@ h2 {
   text-align: left;
   position: relative;
 
+}
+
+th {
+  min-width: 200px;
 }
 .logo {
   display: inline;
@@ -383,30 +409,17 @@ grid-area: header;
 }
 
 .simulation-inputs {
-grid-area: main-left;
+
+width: 100%;
+
 
 }
-.graph1{
-grid-area: main-right;
 
-padding: 5px;
-box-sizing: border-box;
-}
-.graph2{
-grid-area: mid-graph;
-
-}
-.graph3{
-grid-area: mini1;
-
-}
-.graph4{
-  grid-area: mini2;
-  background-color: rgb(255, 136, 0);
-}
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
+  padding: 25px;
+box-sizing: border-box;
 }
 th, td {
   padding: 5px;
@@ -422,11 +435,57 @@ th, td {
   text-decoration: none;
   display: inline-block;
   font-size: 24px;
-  margin: 4px 2px;
+  margin: 10px ;
   cursor: pointer;
-  border-radius: 10%;
+  border-radius: 12px;
+  width: 300px;
 }
 .active {
   background-color: red;
+}
+
+.graph-grid {
+
+  display: grid;
+  grid-template-columns: 1fr 1fr ;
+  grid-template-rows: 300px 300px;
+  height:600 px;
+  width: 100%;
+
+}
+
+@media only screen and (max-width: 1400px) {
+  .graph-grid {
+      grid-template-columns: 1fr;
+       grid-template-rows: 200px 200px 200px 200px;
+  }
+}
+.panel-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 600px;
+}
+
+@media only screen and (max-width: 600px) {
+  .panel-layout {
+      grid-template-columns: 1fr;
+grid-template-rows: none;
+      height: initial;
+  }
+}
+
+.left-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.left-align{
+  text-align: left
+}
+
+.units {
+  font-weight: bold;
+  margin-left: 4px;
+  text-align: right;
 }
 </style>

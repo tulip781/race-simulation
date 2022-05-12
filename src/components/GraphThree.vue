@@ -4,14 +4,14 @@
     <Plotly
     class="graph"
     v-bind="graphData.attr"
-    :data="graphData.data.data"
+    :data="graphData.data"
     :layout="graphData.layout"
         ></Plotly>
   </div>
 </template>
 <script>
 
-import data3 from "./data3.js";
+
 import { Plotly } from "vue-plotly";
 export default {
   name: "GraphThree",
@@ -32,12 +32,7 @@ export default {
      }
    },
   },
-  data() {
-    return {
-      generics: [data3],
-      selected: data3
-    };
-  },
+
   computed: {
     code() {
       const {
@@ -69,12 +64,14 @@ export default {
         dragmode: false,
         scrollZoom: false,
           yaxis: {
-  
-            dtick: 0.1,},
+            title: "Acceleration",
+            showline: true,
+          },
 
           xaxis: {
             title: "Time (s)",
-            dtick: 10,
+            showline: true,
+
           },
 
       },
@@ -98,7 +95,7 @@ export default {
   margin-top: 8px;
 }
 .graph {
- height: 100%;
+  height: 100%;
 }
 div.jsoneditor-menu {
   background-color: #007bff;

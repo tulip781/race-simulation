@@ -4,14 +4,13 @@
     <Plotly
     class="graph"
     v-bind="graphData.attr"
-    :data="graphData.data.data"
+    :data="graphData.data"
     :layout="graphData.layout"
         ></Plotly>
   </div>
 </template>
 <script>
 
-import data2 from "./data2.js";
 import { Plotly } from "vue-plotly";
 export default {
   name: "GraphTwo",
@@ -44,12 +43,7 @@ export default {
      }
    }
  },
-  data() {
-    return {
-      generics: [data2],
-      selected: data2
-    };
-  },
+
   computed: {
     frc: function( ){
       let newV = [];
@@ -141,12 +135,12 @@ export default {
         dragmode: false,
         scrollZoom: false,
           yaxis: {
-            title: "Forces (N)"},
-            dtick: 100,
+            title: "Forces (N)", showline: true,},
+
 
           xaxis: {
             title: "Time (s)",
-            dtick: 10,
+  showline: true,
           },
 
       },
@@ -169,8 +163,9 @@ export default {
 .mark-up {
   margin-top: 8px;
 }
-.graph {
- height: 100%;
+.graph-two {
+   height: 30%;
+   width: 70%;
 }
 div.jsoneditor-menu {
   background-color: #007bff;
