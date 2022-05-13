@@ -75,10 +75,7 @@ and vehicle parameters (most importantly the Gear Ratio) on the performance of a
           <th>Density of Air</th>
           <td><input type="text" id="rho" :placeholder="rho" v-model="rho"><span class="units">kg/m^3</span></td>
         </tr>
-        <tr>
-          <th>Time Duration</th>
-          <td><input type="text" id="tend" :placeholder="tend" v-model="tend" > <span class="units">Seconds</span>  </td>
-        </tr>
+
         <tr>
           <th>Engaged Speed</th>
           <td><input type="text" id="engagedSpeed" :placeholder="engagedSpeed" v-model="engagedSpeed"><span class="units">RPM</span></td>
