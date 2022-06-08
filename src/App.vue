@@ -11,11 +11,79 @@
 and vehicle parameters (most importantly the Gear Ratio) on the performance of a kart. </p>
 
 
-    <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion"/></div>
+    <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion" :acceleration="results.acc" :speed="results.speed"/></div>
 
       <h5>Time taken to travel {{this.distance}} Meters = {{this.timeToTravel}}S</h5>
 
     <div class="panel-layout">
+            <div class="simulation-inputs">
+        <h1>Simulation inputs</h1>
+        <p class="left-align"> Update the inputs below, then press Race to see the effect on the Go Kart. </p>
+
+      <table class="table-inputs">
+          <tr>
+            <th>Race Distance</th>
+            <td><input type="text" id="distance" :placeholder="distance" v-model="distance"></td>
+            <td> <span class="units">m</span></td>
+          </tr>
+        <tr>
+          <th>Number of Teeth on Gear 1 (Driving Gear, Sprocket Gear), <img class="latex__formatting" src="./assets/equation2.svg"></th>
+          <td><input type="text" id="gearRatio" :placeholder="G1" v-model="G1"></td>
+          <td><span class="units">Teeth</span></td>
+        </tr>
+        <tr>
+          <th>Number of Teeth on Gear 2 (Driving Gear, Sprocket Gear), <img class="latex__formatting" src="./assets/equation3.svg"></th>
+          <td><input type="text" id="gearRatio" :placeholder="G2" v-model="G2"></td>
+          <td><span class="units">Teeth</span></td>
+        </tr>
+        <tr>
+          <th>Modification, <img class="latex__formatting" src="./assets/equation.svg"></th>
+          <td>{{GR}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>Mass of Kart + Driver</th>
+          <td><input type="text" id="massKD" :placeholder="m" v-model="m"></td>
+           <td><span class="units">kg</span></td>
+        </tr>
+        <tr>
+          <th>Coefficient of Drag</th>
+          <td><input type="text" id="Cd" :placeholder="Cd" v-model="Cd"></td>
+          
+        </tr>
+        <tr>
+          <th>Frontal Area</th>
+          <td><input type="text" id="A" :placeholder="A" v-model="A"></td>
+          <td><span class="units">m<sup>2</sup></span></td>
+        </tr>
+        <tr>
+          <th>Wheel Radius</th>
+          <td><input type="text" id="wheelr" :placeholder="wheelr" v-model="wheelr"></td>
+          <td><span class="units">m</span></td>
+        </tr>
+        <tr>
+          <th>Mass Factor</th>
+          <td><input type="text" id="lm" :placeholder="lm" v-model="lm"></td>
+        </tr>
+        <tr>
+          <th>Density of Air</th>
+          <td><input type="text" id="rho" :placeholder="rho" v-model="rho"></td>
+          <td><span class="units">kg/m<sup>3</sup></span></td>
+        </tr>
+        <tr>
+          <th>Total Drive Train Efficiency  (not including clutch) (constant)</th>
+          <td><input type="text" id="tEff" :placeholder="tEff" v-model="tEff"></td>
+        </tr>
+      </table>
+      <LoadingButton v-if="race" @loaderMounted="sayHello"> </LoadingButton>
+      <button @click="raceKart" class="race-button" v-bind:class="{ active: race, reset: !race }">
+        <p v-if="!race"> Race Kart {{buttonMessage}} </p>
+        <p v-else> {{buttonMessage}} </p>
+      </button>
+      <button @click="resetValues" class="reset-values" v-bind:class="{ active: race, reset: !race }">
+        <p> Reset Parameters </p>
+      </button>
+    </div>
       <div class="left-wrap">
         <h1>Graph Results</h1>
         <p class="left-align">Below are the resulting graphs from the given inputs. You can use the buttons above each graph to download it as a PNG.</p>
@@ -26,72 +94,7 @@ and vehicle parameters (most importantly the Gear Ratio) on the performance of a
         <GraphFour class="graph4" :time="results.time" :w1="results.w1" :w2="results.w2" :enginerpm="results.enginerpm"></GraphFour>
         </div>
       </div>
-      <div class="simulation-inputs">
-        <h1>Simulation inputs</h1>
-        <p class="left-align"> Update the inputs below, then press Race to see the effect on the Go Kart. </p>
 
-      <table style="width:100%">
-          <tr>
-            <th>Distance</th>
-            <td><input type="text" id="distance" :placeholder="distance" v-model="distance"> <span class="units">Meters (m)</span></td>
-          </tr>
-        <tr>
-          <th>Gear 1:</th>
-          <td><input type="text" id="gearRatio" :placeholder="G1" v-model="G1"><span class="units">Teeth</span></td>
-        </tr>
-        <tr>
-          <th>Gear 2:</th>
-          <td><input type="text" id="gearRatio" :placeholder="G2" v-model="G2"><span class="units">Teeth</span></td>
-        </tr>
-        <tr>
-          <th>Gear Ratio:</th>
-          <td>G1 / G2 = {{GR}}</td>
-        </tr>
-        <tr>
-          <th>Mass of Kart + Driver (kg):</th>
-          <td><input type="text" id="massKD" :placeholder="m" v-model="m"><span class="units">kg</span></td>
-        </tr>
-        <tr>
-          <th>Tyre Pressure (not including differences due to tyre temp change) (bar)</th>
-          <td><input type="text" id="p"  :placeholder="p" v-model="p"><span class="units">bar</span></td>
-        </tr>
-        <tr>
-          <th>Coefficient of drag</th>
-          <td><input type="text" id="Cd" :placeholder="Cd" v-model="Cd"></td>
-        </tr>
-        <tr>
-          <th>Frontal Area</th>
-          <td><input type="text" id="A" :placeholder="A" v-model="A"><span class="units">m^2</span></td>
-        </tr>
-        <tr>
-          <th>Wheel Radius</th>
-          <td><input type="text" id="wheelr" :placeholder="wheelr" v-model="wheelr"><span class="units">m</span></td>
-        </tr>
-        <tr>
-          <th>Mass Factor</th>
-          <td><input type="text" id="lm" :placeholder="lm" v-model="lm"></td>
-        </tr>
-        <tr>
-          <th>Density of Air</th>
-          <td><input type="text" id="rho" :placeholder="rho" v-model="rho"><span class="units">kg/m^3</span></td>
-        </tr>
-
-        <tr>
-          <th>Engaged Speed</th>
-          <td><input type="text" id="engagedSpeed" :placeholder="engagedSpeed" v-model="engagedSpeed"><span class="units">RPM</span></td>
-        </tr>
-        <tr>
-          <th>Total Drive Train Efficiency  (not including clutch) (constant)</th>
-          <td><input type="text" id="tEff" :placeholder="tEff" v-model="tEff"></td>
-        </tr>
-      </table>
-      <button @click="raceKart" class="race-button" v-bind:class="{ active: race, reset: !race }">
-        
-        <p v-if="!race"> Race Kart </p>
-        <p v-else> Reset Race </p>
-
-      </button>
-    </div>
 </div>
 
     
@@ -104,8 +107,10 @@ import GraphTwo from "./components/GraphTwo.vue";
 import GraphThree from "./components/GraphThree.vue";
 import GraphFour from "./components/GraphFour.vue";
 import RaceTrack from "./components/RaceTrack.vue";
+import LoadingButton from "./components/LoadingButton.vue";
 import everpolate from "everpolate";
 import _ from "lodash";
+
 
 import gsap from "gsap";
 export default {
@@ -116,11 +121,13 @@ export default {
     GraphTwo,
     GraphThree,
     GraphFour,
-    RaceTrack
+    RaceTrack,
+    LoadingButton,
   },
   data:function(){
     return {
       // raceCompletion must be decimal between 0-1
+      buttonMessage: "Reset Race",
       raceCompletion: 0, 
       tweenedRaceCompletion: 0,
       race: false,
@@ -156,6 +163,7 @@ export default {
       }
     }
   },
+
   computed: {
     allProperties: function(){
       return `${this.m}|${this.g}|${this.p}|${this.Cd}|${this.A}|${this.wheelr}|${this.G1}|${this.G2}|${this.rho}|${this.distance}|${this.dt}|${this.tend}|${this.engagedSpeed}|${this.dt}|`
@@ -203,10 +211,19 @@ export default {
         
   },
   methods: {
-    raceKart: function(){
+    sayHello(){
+      console.log("HELLOOO LOADER")
+    },
+      raceKart(){
       this.race = !this.race;
+        this.buttonMessage = "CALCULATING";
+        // this.$nextTick().catch(console.log("Ollie this doesnt work"));
+        // console.log("Ollie, next tick has happened", this.buttonMessage)
+    
       if(this.race){
-        this.simulate(this.GR, this.t, this.parameters, this.distance)
+
+        this.simulate(this.GR, this.t, this.parameters, this.distance);
+        this.buttonMessage = "Reset Race"
         this.raceCompletion = 1;
       } else {
         this.raceCompletion = 0;
@@ -245,7 +262,7 @@ export default {
       // set engine speed maximum limit (based on experimental data)
       maxRpm = 6960
       for (let i = 0; i < t.length  ; i++){
-        // console.log(0.005 + (1/parameters['p'])*(0.01+0.0095*((v[i]*3.6)/100)**2))
+  
         c[i+1] = 0.005 + (1/parameters['p'])*(0.01+0.0095*((v[i]*3.6)/100)**2)
         Fr[i+1] = c[i]*parameters['m'] * parameters['g']
         Fd[i+1] = 0.5*parameters['rho']*parameters['Cd']*parameters['A']*(v[i]**2)
@@ -294,7 +311,6 @@ export default {
       gs = a.map(x=>x/this.g);
       function find(val, a, b ){
           let overindex = [];
-          console.log("A ,", a)
           a.forEach((item, index)=> {
             if(item > val){
               overindex.push(index);
@@ -326,9 +342,35 @@ export default {
       this.results['Fr'] = Fr
       this.results['Fd'] = Fd
       this.results['Ft'] = Ft
-      console.log(this.results)
    
-    }
+    },
+    resetValues: function(){
+      this.buttonMessage= "Reset Kart";
+      this.raceCompletion= 0; 
+      this.tweenedRaceCompletion= 0;
+      this.race= false;
+      this.m= 96.5 +85;
+      this.g= 9.81;
+      this.p=2.48211;
+      this.Cd= 0.5;
+      this.A=0.4;
+      this.wheelr= 0.2794/2;
+      this.G1= 20;
+      this.G2= 71;
+      this.rho= 1.23;
+      this.distance= 500;
+      this.dt=0.01;
+      this.tend= 50;
+      this.engagedSpeed= 2000;
+      this.tEff= 0.93;
+      this.rpm= [2000, 2600, 3000, 3500, 4000, 5000, 6000, 6200, 6960]
+      this.drpm= 1;
+      this.raceCompletion = 0;
+      this.timeToTravel = 0;
+      Object.keys(this.results).forEach(key => {
+        this.results[key] = null;
+      })
+    },
   },
     watch: {
     raceCompletion: function(newValue) {
@@ -342,6 +384,7 @@ export default {
       this.race = false;
       })
     },
+
   }
   
 };
@@ -355,6 +398,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 20px;
+  padding: 15px 30px;
 }
 h1 {
   margin: 3px;
@@ -451,23 +495,30 @@ th, td {
 
 }
 
-@media only screen and (max-width: 1400px) {
+@media only screen and (max-width: 1500px) {
   .graph-grid {
       grid-template-columns: 1fr;
-       grid-template-rows: 200px 200px 200px 200px;
+       grid-template-rows: auto auto auto auto;
   }
 }
 .panel-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  grid-template-columns: 1.5fr 2fr;
   height: 600px;
+  box-sizing: border-box;
+ 
 }
 
 @media only screen and (max-width: 600px) {
   .panel-layout {
-      grid-template-columns: 1fr;
+      grid-template-columns: 100%;
 grid-template-rows: none;
       height: initial;
+  }
+    .graph-grid {
+      grid-template-columns: 100%;
+       grid-template-rows: auto auto auto auto;
   }
 }
 
@@ -484,5 +535,25 @@ grid-template-rows: none;
   font-weight: bold;
   margin-left: 4px;
   text-align: right;
+}
+
+.reset-values {
+  background-color: #4c91af;
+  border: none;
+  color: white;
+  padding: 5px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 24px;
+  margin: 10px ;
+  cursor: pointer;
+  border-radius: 12px;
+  width: 300px;
+}
+
+.table-inputs{
+  width: 100%;
+
 }
 </style>

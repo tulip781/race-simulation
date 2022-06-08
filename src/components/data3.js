@@ -11,7 +11,7 @@ const trace1 = {
       data: [trace1],
       attr: { displayModeBar: false },
       layout: {
-        title: 'Longitudional Acceleration (G/s)',
+        title: `Longitudional Acceleration of Kart (g's)`,
 
         dragmode: false,
         scrollZoom: false,

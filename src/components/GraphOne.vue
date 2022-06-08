@@ -4,8 +4,8 @@
     <Plotly
     class="graph"
     v-bind="graphData.data.attr"
-    :data="graphData.data"
-    :layout="graphData.layout"
+    :data="graphData.data.data"
+    :layout="graphData.data.layout"
        :display-mode-bar="false"
       :drag-mode="false"
       :responsive="true"
@@ -16,6 +16,7 @@
 
 
 import { Plotly } from "vue-plotly";
+
 export default {
   name: "GraphOne",
   components: {
@@ -42,6 +43,22 @@ export default {
 
   },
   computed: {
+        customRange(){
+        let range;
+        if (!Array.isArray(this.time) || !this.time.length){
+          range = [0, 10];
+        } else {
+          range = []
+        }
+        return range},
+            customTick(){
+        let tick;
+        if (!Array.isArray(this.time) || !this.time.length){
+          tick = 2;
+        } else {
+          tick = 0;
+        }
+        return tick},
     code() {
       const {
         selected: {
@@ -75,12 +92,12 @@ export default {
             scrollZoom: false,
             title: 'Kart Speed (km/h) vs Time (s) for a Gear Ration of ' + this.gr.toString(),           
               xaxis: {
-                title: "Time (s)",
-          showline: true,
+                title: "Time (s)", dtick: this.customTick, range: this.customRange, tick: ''
+
               },
 
               yaxis: {
-                title: "Speed (km/h)", showline: true,
+                title: "Speed (km/h)" , dtick: this.customTick, range: this.customRange, tick: ''
 },
            
 

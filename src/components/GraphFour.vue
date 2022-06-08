@@ -4,8 +4,8 @@
     <Plotly
     class="graph"
     v-bind="graphData.attr"
-    :data="graphData.data"
-    :layout="graphData.layout"
+    :data="graphData.data.data"
+    :layout="graphData.data.layout"
         ></Plotly>
   </div>
 </template>
@@ -13,39 +13,58 @@
 
 
 import { Plotly } from "vue-plotly";
+
+
 export default {
   name: "GraphFour",
   components: {
       Plotly
   },
 
+
   props:{
     time: {
-     type: Array,
+     type: [Object, Array],
      default: function(){
        return []
      }
    },
    w1: {
-     type: Array,
+     type: [Object, Array],
      default: function(){
        return []
      }
    },
    w2: {
-     type: Array,
+     type: [Object, Array],
      default: function(){
        return []
      }
    },
    enginerpm: {
-     type: Array,
+     type: [Object, Array],
      default: function(){
        return []
      }
    },
   },
   computed: {
+    customRange(){
+        let range;
+        if (!Array.isArray(this.time) || !this.time.length){
+          range = [0, 10];
+        } else {
+          range = []
+        }
+        return range},
+            customTick(){
+        let tick;
+        if (!Array.isArray(this.time) || !this.time.length){
+          tick = 2;
+        } else {
+          tick = 0;
+        }
+        return tick},
     code() {
       const {
         selected: {
@@ -65,7 +84,7 @@ export default {
         line: {
           color:  "#66FF00"
         },
-        name: "Rear Axle Sprocket"
+        name: "Clutch Sprocket"
       }
     },
     trace2: function(){
@@ -76,7 +95,7 @@ export default {
         line: {
           color:  "#0096FF"
         },
-        name: "Clutch Sprocket"
+        name: "Rear Axle"
       }
     },
     trace3: function(){
@@ -97,19 +116,18 @@ export default {
     data: [this.trace1, this.trace2, this.trace3],
     attr: { displayModeBar: false },
     layout: {
-      title: 'Engine and Sprocket Speeds (RPM)',
+      title: 'Engine and Sprocket Speed (rpm)',
 
       dragmode: false,
       scrollZoom: false,
         yaxis: {
-          title: "Forces (N)"     ,    showline: true},
+          title: "Angular Speed (rpm)"  , dtick: this.customTick, range: this.customRange, tick: '' },
    
 
 
         xaxis: {
-          title: "Time (s)",
-            showline: true,
-     
+          title: "Time (s)", dtick: this.customTick, range: this.customRange, tick: ''
+         
         },
 
     },

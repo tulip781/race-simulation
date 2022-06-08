@@ -4,8 +4,8 @@
     <Plotly
     class="graph"
     v-bind="graphData.attr"
-    :data="graphData.data"
-    :layout="graphData.layout"
+    :data="graphData.data.data"
+    :layout="graphData.data.layout"
         ></Plotly>
   </div>
 </template>
@@ -13,11 +13,13 @@
 
 
 import { Plotly } from "vue-plotly";
+
 export default {
   name: "GraphThree",
   components: {
       Plotly
   },
+
   props: {
     time: {
      type: Array,
@@ -34,6 +36,22 @@ export default {
   },
 
   computed: {
+        customRange(){
+        let range;
+        if (!Array.isArray(this.time) || !this.time.length){
+          range = [0, 10];
+        } else {
+          range = []
+        }
+        return range},
+            customTick(){
+        let tick;
+        if (!Array.isArray(this.time) || !this.time.length){
+          tick = 2;
+        } else {
+          tick = 0;
+        }
+        return tick},
     code() {
       const {
         selected: {
@@ -59,18 +77,18 @@ export default {
       data: [this.trace1],
       attr: { displayModeBar: false },
       layout: {
-        title: 'Longitudional Acceleration (G/s)',
+        title: `Longitudional Acceleration of Kart (g's)`,
 
         dragmode: false,
         scrollZoom: false,
           yaxis: {
-            title: "Acceleration",
-            showline: true,
+            title: "Acceleration (g's)" , dtick: this.customTick, range: this.customRange, tick: ''
+   
           },
 
           xaxis: {
-            title: "Time (s)",
-            showline: true,
+            title: "Time (s)" , dtick: this.customTick, range: this.customRange, tick: ''
+         
 
           },
 

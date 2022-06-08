@@ -4,19 +4,21 @@
     <Plotly
     class="graph"
     v-bind="graphData.attr"
-    :data="graphData.data"
-    :layout="graphData.layout"
+    :data="graphData.data.data"
+    :layout="graphData.data.layout"
         ></Plotly>
   </div>
 </template>
 <script>
 
 import { Plotly } from "vue-plotly";
+
 export default {
   name: "GraphTwo",
   components: {
       Plotly
   },
+
  props: {
    time: {
      type: Array,
@@ -45,6 +47,22 @@ export default {
  },
 
   computed: {
+        customRange(){
+        let range;
+        if (!Array.isArray(this.time) || !this.time.length){
+          range = [0, 10];
+        } else {
+          range = []
+        }
+        return range},
+            customTick(){
+        let tick;
+        if (!Array.isArray(this.time) || !this.time.length){
+          tick = 2;
+        } else {
+          tick = 0;
+        }
+        return tick},
     frc: function( ){
       let newV = [];
       if(this.fr){
@@ -135,12 +153,12 @@ export default {
         dragmode: false,
         scrollZoom: false,
           yaxis: {
-            title: "Forces (N)", showline: true,},
+            title: "Forces (N)",autorange: true , dtick: this.customTick, range: this.customRange, tick: ''},
 
 
           xaxis: {
-            title: "Time (s)",
-  showline: true,
+            title: "Time (s)",autorange: true , dtick: this.customTick, range: this.customRange, tick: '',
+
           },
 
       },

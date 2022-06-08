@@ -44,7 +44,7 @@ export default {
     data: [trace1, trace2, trace3, trace4],
     attr: { displayModeBar: false },
     layout: {
-      title: 'Engine and Sprocket Speeds (RPM)',
+      title: 'Engine and Sprocket Speed (rpm)',
 
       dragmode: false,
       scrollZoom: false,

@@ -11,6 +11,14 @@ export default {
     carCompletion:{
       type: Number,
       deafault: 0,
+    },
+    speed: {
+      type: [],
+      deafault: []
+    },
+     acceleration: {
+      type: [],
+      deafault: []
     }
   },
   data() {
