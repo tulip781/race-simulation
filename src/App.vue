@@ -77,7 +77,7 @@ and vehicle parameters (most importantly the Gear Ratio) on the performance of a
       </table>
       <LoadingButton v-if="race" @loaderMounted="sayHello"> </LoadingButton>
       <button @click="raceKart" class="race-button" v-bind:class="{ active: race, reset: !race }">
-        <p v-if="!race"> Race Kart {{buttonMessage}} </p>
+        <p v-if="!race"> Race Kart</p>
         <p v-else> {{buttonMessage}} </p>
       </button>
       <button @click="resetValues" class="reset-values" v-bind:class="{ active: race, reset: !race }">
@@ -461,6 +461,7 @@ table, th, td {
   border-collapse: collapse;
   padding: 25px;
 box-sizing: border-box;
+margin-bottom: 15px;
 }
 th, td {
   padding: 5px;
