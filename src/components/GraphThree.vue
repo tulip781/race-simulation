@@ -82,12 +82,12 @@ export default {
         dragmode: false,
         scrollZoom: false,
           yaxis: {
-            title: "Acceleration (g's)" , dtick: this.customTick, range: this.customRange, tick: ''
+            title: "Acceleration (g's)" , dtick: this.customTick, range: this.customRange, tick: '' ,   showline: true,
    
           },
 
           xaxis: {
-            title: "Time (s)" , dtick: this.customTick, range: this.customRange, tick: ''
+            title: "Time (s)" , dtick: this.customTick, range: this.customRange, tick: '' ,   showline: true,
          
 
           },

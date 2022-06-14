@@ -121,12 +121,12 @@ export default {
       dragmode: false,
       scrollZoom: false,
         yaxis: {
-          title: "Angular Speed (rpm)"  , dtick: this.customTick, range: this.customRange, tick: '' },
+          title: "Angular Speed (rpm)"  , dtick: this.customTick, range: this.customRange, tick: ''   ,  showline: true,},
    
 
 
         xaxis: {
-          title: "Time (s)", dtick: this.customTick, range: this.customRange, tick: ''
+          title: "Time (s)", dtick: this.customTick, range: this.customRange, tick: ''   , showline: true,
          
         },
 

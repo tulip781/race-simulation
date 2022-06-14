@@ -75,12 +75,11 @@ and vehicle parameters (most importantly the Gear Ratio) on the performance of a
           <td><input type="text" id="tEff" :placeholder="tEff" v-model="tEff"></td>
         </tr>
       </table>
-      <LoadingButton v-if="race" @loaderMounted="sayHello"> </LoadingButton>
-      <button @click="raceKart" class="race-button" v-bind:class="{ active: race, reset: !race }">
+      <button @click="raceKart" class="race-button" v-bind:class="{ active: race, reset: !race,  }">
         <p v-if="!race"> Race Kart</p>
-        <p v-else> {{buttonMessage}} </p>
+        <p v-else class="calc-button"> {{buttonMessage}}  <span v-html="rawHtml"></span></p>
       </button>
-      <button @click="resetValues" class="reset-values" v-bind:class="{ active: race, reset: !race }">
+      <button @click="resetValues" class="reset-values" v-bind:class="[{ active: race, reset: !race , },buttonStyle]">
         <p> Reset Parameters </p>
       </button>
     </div>
@@ -107,7 +106,7 @@ import GraphTwo from "./components/GraphTwo.vue";
 import GraphThree from "./components/GraphThree.vue";
 import GraphFour from "./components/GraphFour.vue";
 import RaceTrack from "./components/RaceTrack.vue";
-import LoadingButton from "./components/LoadingButton.vue";
+
 import everpolate from "everpolate";
 import _ from "lodash";
 
@@ -122,13 +121,17 @@ export default {
     GraphThree,
     GraphFour,
     RaceTrack,
-    LoadingButton,
+
   },
   data:function(){
     return {
       // raceCompletion must be decimal between 0-1
       buttonMessage: "Reset Race",
+      buttonStyle: {
+        'backgroundColor': 'green'
+      } ,
       raceCompletion: 0, 
+      rawHtml: "",
       tweenedRaceCompletion: 0,
       race: false,
       m: 96.5 +85,
@@ -221,10 +224,17 @@ export default {
         // console.log("Ollie, next tick has happened", this.buttonMessage)
     
       if(this.race){
+        this.buttonMessage = "CALCULATING";
+        this.rawHtml = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`
+        this.buttonStyle.backgroundColor = "orange";
+        setTimeout(()=>{
+          this.simulate(this.GR, this.t, this.parameters, this.distance);
+          this.rawHtml = ``;
+          this.buttonMessage = "Reset Race";
+          this.buttonStyle.backgroundColor = "red";
+          this.raceCompletion = 1;
+        },100)
 
-        this.simulate(this.GR, this.t, this.parameters, this.distance);
-        this.buttonMessage = "Reset Race"
-        this.raceCompletion = 1;
       } else {
         this.raceCompletion = 0;
         this.timeToTravel = 0;
@@ -556,5 +566,44 @@ grid-template-rows: none;
 .table-inputs{
   width: 100%;
 
+}
+.lds-ring {
+  display: inline-block;
+
+  width: 30px;
+  height: 30px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.calc-button{
+  display: flex;
+  align-items: center;;
 }
 </style>

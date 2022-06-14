@@ -153,11 +153,11 @@ export default {
         dragmode: false,
         scrollZoom: false,
           yaxis: {
-            title: "Forces (N)",autorange: true , dtick: this.customTick, range: this.customRange, tick: ''},
+            title: "Forces (N)",autorange: true , dtick: this.customTick, range: this.customRange, tick: '',    showline: true,},
 
 
           xaxis: {
-            title: "Time (s)",autorange: true , dtick: this.customTick, range: this.customRange, tick: '',
+            title: "Time (s)",autorange: true , dtick: this.customTick, range: this.customRange, tick: '',    showline: true,
 
           },
 
