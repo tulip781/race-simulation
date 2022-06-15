@@ -237,7 +237,7 @@ export default {
 
       } else {
         this.raceCompletion = 0;
-        this.timeToTravel = 0;
+ 
         Object.keys(this.results).forEach(key => {
           this.results[key] = null;
         })
@@ -339,7 +339,17 @@ export default {
             timeDist = 0
           }
 
+      let distToFiftyM, accToFiftyM,speedToFiftyM;
 
+      let closest = d.reduce(function(prev, curr) {
+        return (Math.abs(curr - 50) < Math.abs(prev - 50) ? curr : prev);
+      });
+      console.log("Closest", closest)
+
+      let maxIndexD = d.indexOf(closest) +1;
+        console.log(maxIndexD, "MAX INDEX")
+      accToFiftyM = gs.slice(0, maxIndexD);
+      speedToFiftyM = km.slice(0,maxIndexD);
       this.results['time'] = t
       this.results['enginerpm'] = eng
       this.results['speed'] = km
@@ -352,6 +362,9 @@ export default {
       this.results['Fr'] = Fr
       this.results['Fd'] = Fd
       this.results['Ft'] = Ft
+      this.results['distToFiftyM'] = distToFiftyM
+      this.results['accToFiftyM'] = accToFiftyM
+      this.results['speedToFiftyM'] = speedToFiftyM
    
     },
     resetValues: function(){
@@ -521,7 +534,7 @@ th, td {
  
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1068px) {
   .panel-layout {
       grid-template-columns: 100%;
 grid-template-rows: none;
