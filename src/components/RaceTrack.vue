@@ -14,11 +14,15 @@ export default {
     },
     speed: {
       type: [],
-      default: []
+      default: ()=>{
+        return []
+      } 
     },
      acceleration: {
       type: [],
-      default: []
+      default: ()=>{
+        return []
+      } 
     }
   },
   data() {
@@ -40,8 +44,12 @@ export default {
       if(!this.acceleration){
         return {}
       }
-
-      for (let i = 0; i < this.acceleration.length; i = i +27){
+      let delta = Math.floor(this.acceleration.length / 60);
+      if(delta == 0){
+        delta = 1;
+      }
+      console.log("deatla", delta)
+      for (let i = 0; i < this.acceleration.length; i = i +delta){
         valsAcc.push(this.acceleration[i]);
         valsVel.push(this.speed[i]);
       }

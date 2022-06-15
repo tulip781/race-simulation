@@ -7,13 +7,13 @@
         <h2>MECH40007 - Design and Manufacture</h2>
       </div>
     </div>
-  <p class="left-align">The purpose of the tool is to help students intuitively understand the effects of various transmission
+  <p class="left-align">The purpose of this tool is to help students intuitively understand the effects of various transmission
 and vehicle parameters (most importantly the Gear Ratio) on the performance of a kart. </p>
 
 
-    <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion" :acceleration="results.acc" :speed="results.speed"/></div>
+    <div class="simulation"><h2>Drag Race Simulation</h2><RaceTrack :carCompletion="tweenedRaceCompletion" :acceleration="results.accToFiftyM" :speed="results.speedToFiftyM"/></div>
 
-      <h5>Time taken to travel {{this.distance}} Meters = {{this.timeToTravel}}S</h5>
+      <h5>The above track is 50m (not to scale) and approximates how the kart's velocity changes across the first 50m.</h5>
 
     <div class="panel-layout">
             <div class="simulation-inputs">
@@ -582,7 +582,9 @@ grid-template-rows: none;
 }
 .lds-ring {
   display: inline-block;
-
+  position: relative;
+  bottom: 20px;
+  left: 10px;
   width: 30px;
   height: 30px;
 }
