@@ -90,7 +90,12 @@ export default {
 
             dragmode: false,
             scrollZoom: false,
-            title: 'Kart Speed (km/h) vs Time (s) for a Gear Ration of ' + this.gr.toString(),           
+            title: {
+              text: 'Kart Speed (km/h) vs Time (s) for a Gear Modification of ' + this.gr.toString(),
+              font: {
+                size: 13
+              }
+            },           
               xaxis: {
                 title: "Time (s)", dtick: this.customTick, range: this.customRange, tick: '',    showline: true,
 
